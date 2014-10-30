@@ -13,7 +13,7 @@ func parse(pointer string) ([]string, error) {
 		return nil, fmt.Errorf("Invalid JSON pointer: %q", pointer)
 	}
 	tokens := strings.Split(pointer[1:], "/")
-	if len(tokens) == 0 || len(tokens[0]) == 0 {
+	if len(tokens) == 0 { //*|| len(tokens[0]) == 0 {
 		return nil, fmt.Errorf("Invalid JSON pointer: %q", pointer)
 	}
 	return tokens, nil
@@ -32,14 +32,16 @@ func Get(obj interface{}, pointer string) (rv interface{}, err error) {
 
 	i := 0
 	v := reflect.ValueOf(obj)
-	for i < len(tokens) {
-		token := tokens[i]
-		if n, err := strconv.Atoi(token); err == nil {
-			v = v.Elem().Index(n)
-		} else {
-			v = v.MapIndex(reflect.ValueOf(token))
+	if len(tokens) > 0 && tokens[0] != "" {
+		for i < len(tokens) {
+			token := tokens[i]
+			if n, err := strconv.Atoi(token); err == nil {
+				v = v.Elem().Index(n)
+			} else {
+				v = v.MapIndex(reflect.ValueOf(token))
+			}
+			i++
 		}
-		i++
 	}
 	return v.Interface(), nil
 }
@@ -59,23 +61,25 @@ func Set(obj interface{}, pointer string, value interface{}) (err error) {
 	v := reflect.ValueOf(obj)
 	var p reflect.Value
 	var token string
-	for i < len(tokens) {
-		p = v
-		token = tokens[i]
-		if n, err := strconv.Atoi(token); err == nil {
-			v = v.Elem().Index(n)
-		} else {
-			v = v.MapIndex(reflect.ValueOf(token))
+	if len(tokens) > 0 && tokens[0] != "" {
+		for i < len(tokens) {
+			p = v
+			token = tokens[i]
+			if n, err := strconv.Atoi(token); err == nil {
+				v = v.Elem().Index(n)
+			} else {
+				v = v.MapIndex(reflect.ValueOf(token))
+			}
+			i++
 		}
-		i++
+		if p.Kind() == reflect.Map {
+			p.SetMapIndex(reflect.ValueOf(token), reflect.ValueOf(value))
+		} else {
+			v.Set(reflect.ValueOf(value))
+		}
+		return nil
 	}
-
-	if p.Kind() == reflect.Map {
-		p.SetMapIndex(reflect.ValueOf(token), reflect.ValueOf(value))
-	} else {
-		v.Set(reflect.ValueOf(value))
-	}
-	return nil
+	return fmt.Errorf("pointer should have element")
 }
 
 func Remove(obj interface{}, pointer string) (rv interface{}, err error) {
@@ -93,17 +97,21 @@ func Remove(obj interface{}, pointer string) (rv interface{}, err error) {
 	v := reflect.ValueOf(obj)
 	var p, pp reflect.Value
 	var token, ptoken string
-	for i < len(tokens) {
-		pp = p
-		p = v
-		ptoken = token
-		token = tokens[i]
-		if n, err := strconv.Atoi(token); err == nil {
-			v = v.Elem().Index(n)
-		} else {
-			v = v.MapIndex(reflect.ValueOf(token))
+	if len(tokens) > 0 && tokens[0] != "" {
+		for i < len(tokens) {
+			pp = p
+			p = v
+			ptoken = token
+			token = tokens[i]
+			if n, err := strconv.Atoi(token); err == nil {
+				v = v.Elem().Index(n)
+			} else {
+				v = v.MapIndex(reflect.ValueOf(token))
+			}
+			i++
 		}
-		i++
+	} else {
+		return nil, fmt.Errorf("pointer should have element")
 	}
 
 	var nv reflect.Value

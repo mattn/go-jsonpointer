@@ -16,7 +16,8 @@ var testGetCases = []struct {
 	{`{"foo":2}`, `/foo`, 2.0, ``},
 	{`{"foo":[]}`, `/foo`, []interface{}{}, ``},
 	{`{"foo":"yes"}`, `/foo`, "yes", ``},
-	{`{"foo":3.14}`, `/`, "", `Invalid JSON pointer: "/"`},
+	{`{"foo":3.14}`, ``, "", `Invalid JSON pointer: ""`},
+	{`{"foo":3.14}`, `/`, map[string]interface{}{"foo": 3.14}, ``},
 }
 
 func TestGet(t *testing.T) {
@@ -30,7 +31,7 @@ func TestGet(t *testing.T) {
 		value, err := Get(obj, testcase.pointer)
 		if err != nil {
 			if err.Error() != testcase.err {
-				t.Fatal(err)
+				t.Fatal(testcase.json, err)
 			}
 		} else if !reflect.DeepEqual(value, testcase.expect) {
 			t.Fatalf("Expected %v, but %v:", testcase.expect, value)
@@ -50,7 +51,7 @@ var testSetCases = []struct {
 	{`{"foo":2}`, `/foo`, true, `{"foo":true}`, ``},
 	{`{"foo":2}`, `/foo`, "2", `{"foo":"2"}`, ``},
 	{`{"foo":3.14}`, `/foo`, 1.5, `{"foo":1.5}`, ``},
-	{`{"foo":3.14}`, `/`, 1.5, `{}`, `Invalid JSON pointer: "/"`},
+	{`{"foo":3.14}`, `/`, 1.5, `{}`, `pointer should have element`},
 }
 
 func TestSet(t *testing.T) {
@@ -85,7 +86,7 @@ var testRemoveCases = []struct {
 	{`{"foo":2,"bar":3}`, `/bar`, `{"foo":2}`, ``},
 	{`{"foo":[1,3,true]}`, `/foo/1`, `{"foo":[1,true]}`, ``},
 	{`{"foo":[]}`, `/foo`, `{}`, ``},
-	{`{"foo":3.14}`, `/`, `{}`, `Invalid JSON pointer: "/"`},
+	{`{"foo":3.14}`, `/`, `{}`, `pointer should have element`},
 }
 
 func TestRemove(t *testing.T) {
