@@ -19,6 +19,32 @@ func parse(pointer string) ([]string, error) {
 	return tokens, nil
 }
 
+func Has(obj interface{}, pointer string) (rv bool, err error) {
+	defer func() {
+		if e := recover(); e != nil {
+			err = fmt.Errorf("Invalid JSON pointer: %q: %v", pointer, e)
+		}
+	}()
+	tokens, err := parse(pointer)
+	if err != nil {
+		return false, err
+	}
+
+	i := 0
+	v := reflect.ValueOf(obj)
+	if len(tokens) > 0 && tokens[0] != "" {
+		for i < len(tokens) {
+			token := tokens[i]
+			if n, err := strconv.Atoi(token); err == nil {
+				v = v.Elem().Index(n)
+			} else {
+				v = v.MapIndex(reflect.ValueOf(token))
+			}
+			i++
+		}
+	}
+	return true, nil
+}
 func Get(obj interface{}, pointer string) (rv interface{}, err error) {
 	defer func() {
 		if e := recover(); e != nil {
