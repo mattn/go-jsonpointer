@@ -10,28 +10,24 @@ var testHasCases = []struct {
 	json    string
 	pointer string
 	expect  bool
-	err     string
 }{
-	{`{"foo":[1,3,true]}`, `/foo/2`, true, ``},
-	{`{"foo":2}`, `/foo`, true, ``},
-	{`{"foo":[]}`, `/fooo`, false, ``},
-	{`{"foo":3.14}`, ``, false, `Invalid JSON pointer: ""`},
+	{`{"foo":[1,3,true]}`, `/foo/2`, true},
+	{`{"foo":[1,3,true]}`, `/foo/3`, false},
+	{`{"foo":2}`, `/foo`, true},
+	{`{"foo":[]}`, `/fooo`, false},
+	{`{"foo":3.14}`, ``, false},
 }
 
 func TestHas(t *testing.T) {
-	for _, testcase := range testGetCases {
+	for _, testcase := range testHasCases {
 		var obj interface{}
 		err := json.Unmarshal([]byte(testcase.json), &obj)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		value, err := Get(obj, testcase.pointer)
-		if err != nil {
-			if err.Error() != testcase.err {
-				t.Fatal(testcase.json, err)
-			}
-		} else if !reflect.DeepEqual(value, testcase.expect) {
+		value := Has(obj, testcase.pointer)
+		if value != testcase.expect {
 			t.Fatalf("Expected %v, but %v:", testcase.expect, value)
 		}
 	}
