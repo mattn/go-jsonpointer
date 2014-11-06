@@ -19,15 +19,15 @@ func parse(pointer string) ([]string, error) {
 	return tokens, nil
 }
 
-func Has(obj interface{}, pointer string) (rv bool, err error) {
+func Has(obj interface{}, pointer string) (rv bool) {
 	defer func() {
 		if e := recover(); e != nil {
-			err = fmt.Errorf("Invalid JSON pointer: %q: %v", pointer, e)
+			rv = false
 		}
 	}()
 	tokens, err := parse(pointer)
 	if err != nil {
-		return false, err
+		return false
 	}
 
 	i := 0
@@ -42,8 +42,9 @@ func Has(obj interface{}, pointer string) (rv bool, err error) {
 			}
 			i++
 		}
+		return v.IsValid()
 	}
-	return true, nil
+	return false
 }
 func Get(obj interface{}, pointer string) (rv interface{}, err error) {
 	defer func() {
