@@ -34,9 +34,12 @@ func Has(obj interface{}, pointer string) (rv bool) {
 	v := reflect.ValueOf(obj)
 	if len(tokens) > 0 && tokens[0] != "" {
 		for i < len(tokens) {
+			for v.Kind() == reflect.Interface {
+				v = v.Elem()
+			}
 			token := tokens[i]
 			if n, err := strconv.Atoi(token); err == nil {
-				v = v.Elem().Index(n)
+				v = v.Index(n)
 			} else {
 				v = v.MapIndex(reflect.ValueOf(token))
 			}
@@ -93,10 +96,13 @@ func Set(obj interface{}, pointer string, value interface{}) (err error) {
 	var token string
 	if len(tokens) > 0 && tokens[0] != "" {
 		for i < len(tokens) {
+			for v.Kind() == reflect.Interface {
+				v = v.Elem()
+			}
 			p = v
 			token = tokens[i]
 			if n, err := strconv.Atoi(token); err == nil {
-				v = v.Elem().Index(n)
+				v = v.Index(n)
 			} else {
 				v = v.MapIndex(reflect.ValueOf(token))
 			}
@@ -129,12 +135,15 @@ func Remove(obj interface{}, pointer string) (rv interface{}, err error) {
 	var token, ptoken string
 	if len(tokens) > 0 && tokens[0] != "" {
 		for i < len(tokens) {
+			for v.Kind() == reflect.Interface {
+				v = v.Elem()
+			}
 			pp = p
 			p = v
 			ptoken = token
 			token = tokens[i]
 			if n, err := strconv.Atoi(token); err == nil {
-				v = v.Elem().Index(n)
+				v = v.Index(n)
 			} else {
 				v = v.MapIndex(reflect.ValueOf(token))
 			}
@@ -153,11 +162,11 @@ func Remove(obj interface{}, pointer string) (rv interface{}, err error) {
 			}
 		}
 	} else {
-		nv = reflect.Zero(p.Elem().Type())
+		nv = reflect.Zero(p.Type())
 		n, _ := strconv.Atoi(token)
-		for m := 0; m < p.Elem().Len(); m++ {
+		for m := 0; m < p.Len(); m++ {
 			if n != m {
-				nv = reflect.Append(nv, p.Elem().Index(m))
+				nv = reflect.Append(nv, p.Index(m))
 			}
 		}
 	}
