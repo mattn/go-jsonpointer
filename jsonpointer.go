@@ -61,9 +61,12 @@ func Get(obj interface{}, pointer string) (rv interface{}, err error) {
 	v := reflect.ValueOf(obj)
 	if len(tokens) > 0 && tokens[0] != "" {
 		for i < len(tokens) {
+			for v.Kind() == reflect.Interface {
+				v = v.Elem()
+			}
 			token := tokens[i]
 			if n, err := strconv.Atoi(token); err == nil {
-				v = v.Elem().Index(n)
+				v = v.Index(n)
 			} else {
 				v = v.MapIndex(reflect.ValueOf(token))
 			}

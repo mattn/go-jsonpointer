@@ -45,6 +45,7 @@ var testGetCases = []struct {
 	{`{"foo":"yes"}`, `/foo`, "yes", ``},
 	{`{"foo":3.14}`, ``, "", `Invalid JSON pointer: ""`},
 	{`{"foo":3.14}`, `/`, map[string]interface{}{"foo": 3.14}, ``},
+	{`{"hoge":"fuga","foo":{"fuga":"foo1","hoge":"foo2"}}`, `/foo/fuga`, "foo1", ``},
 }
 
 func TestGet(t *testing.T) {
