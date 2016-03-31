@@ -16,6 +16,10 @@ func parse(pointer string) ([]string, error) {
 	if len(tokens) == 0 { //*|| len(tokens[0]) == 0 {
 		return nil, fmt.Errorf("Invalid JSON pointer: %q", pointer)
 	}
+	for i, token := range tokens {
+		tokens[i] = strings.Replace(
+			strings.Replace(token, "~1", "/", -1), "~0", "~", -1)
+	}
 	return tokens, nil
 }
 
