@@ -17,6 +17,7 @@ var testHasCases = []struct {
 	{`{"foo":[]}`, `/fooo`, false},
 	{`{"foo":3.14}`, ``, false},
 	{`{"hoge":"fuga","foo":{"fuga":"foo1","hoge":"foo2"}}`, `/foo/fuga`, true},
+	{`{"foo~bar/baz":[1,3,true]}`, `/foo~0bar~1baz/1`, true},
 }
 
 func TestHas(t *testing.T) {
@@ -47,6 +48,7 @@ var testGetCases = []struct {
 	{`{"foo":3.14}`, ``, "", `Invalid JSON pointer: ""`},
 	{`{"foo":3.14}`, `/`, map[string]interface{}{"foo": 3.14}, ``},
 	{`{"hoge":"fuga","foo":{"fuga":"foo1","hoge":"foo2"}}`, `/foo/fuga`, "foo1", ``},
+	{`{"foo~bar/baz":[1,3,true]}`, `/foo~0bar~1baz/1`, 3.0, ``},
 }
 
 func TestGet(t *testing.T) {
@@ -82,6 +84,7 @@ var testSetCases = []struct {
 	{`{"foo":3.14}`, `/foo`, 1.5, `{"foo":1.5}`, ``},
 	{`{"foo":3.14}`, `/`, 1.5, `{}`, `pointer should have element`},
 	{`{"hoge":"fuga","foo":{"fuga":"foo1","hoge":"foo2"}}`, `/foo/fuga`, 3.0, `{"hoge":"fuga","foo":{"fuga":3,"hoge":"foo2"}}`, ``},
+	{`{"foo~bar/baz":[1,3,true]}`, `/foo~0bar~1baz/1`, 4.0, `{"foo~bar/baz":[1,4,true]}`, ``},
 }
 
 func TestSet(t *testing.T) {
@@ -118,6 +121,7 @@ var testRemoveCases = []struct {
 	{`{"foo":[]}`, `/foo`, `{}`, ``},
 	{`{"foo":3.14}`, `/`, `{}`, `pointer should have element`},
 	{`{"hoge":"fuga","foo":{"fuga":"foo1","hoge":"foo2"}}`, `/foo/fuga`, `{"hoge":"fuga","foo":{"hoge":"foo2"}}`, ``},
+	{`{"foo~bar/baz":[1,3,true]}`, `/foo~0bar~1baz/1`, `{"foo~bar/baz":[1,true]}`, ``},
 }
 
 func TestRemove(t *testing.T) {
