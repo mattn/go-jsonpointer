@@ -1,0 +1,12 @@
+language: go
+go:
+  - tip
+
+install:
+  - go get -u golang.org/x/tools/cmd/goimports
+  - go get -u github.com/golang/lint/golint
+
+script:
+  - go test ./...
+  - diff <(goimports -d .) <(printf "")
+  - diff <(golint ./...) <(printf "")
