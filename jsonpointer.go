@@ -23,6 +23,7 @@ func parse(pointer string) ([]string, error) {
 	return tokens, nil
 }
 
+// Has return whether the obj has pointer.
 func Has(obj interface{}, pointer string) (rv bool) {
 	defer func() {
 		if e := recover(); e != nil {
@@ -54,6 +55,8 @@ func Has(obj interface{}, pointer string) (rv bool) {
 	}
 	return false
 }
+
+// Get return a value which is pointed with pointer on obj.
 func Get(obj interface{}, pointer string) (rv interface{}, err error) {
 	defer func() {
 		if e := recover(); e != nil {
@@ -84,6 +87,7 @@ func Get(obj interface{}, pointer string) (rv interface{}, err error) {
 	return v.Interface(), nil
 }
 
+// Set set a value which is pointed with pointer on obj.
 func Set(obj interface{}, pointer string, value interface{}) (err error) {
 	defer func() {
 		if e := recover(); e != nil {
@@ -123,6 +127,7 @@ func Set(obj interface{}, pointer string, value interface{}) (err error) {
 	return fmt.Errorf("pointer should have element")
 }
 
+// Remove remove a value which is pointed with pointer on obj.
 func Remove(obj interface{}, pointer string) (rv interface{}, err error) {
 	defer func() {
 		if e := recover(); e != nil {
