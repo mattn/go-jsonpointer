@@ -42,7 +42,8 @@ func Has(obj interface{}, pointer string) (rv bool) {
 				v = v.Elem()
 			}
 			token := tokens[i]
-			if n, err := strconv.Atoi(token); err == nil {
+
+			if n, err := strconv.Atoi(token); err == nil && isIndexed(v) {
 				v = v.Index(n)
 			} else {
 				v = v.MapIndex(reflect.ValueOf(token))
@@ -72,7 +73,7 @@ func Get(obj interface{}, pointer string) (rv interface{}, err error) {
 				v = v.Elem()
 			}
 			token := tokens[i]
-			if n, err := strconv.Atoi(token); err == nil {
+			if n, err := strconv.Atoi(token); err == nil && isIndexed(v) {
 				v = v.Index(n)
 			} else {
 				v = v.MapIndex(reflect.ValueOf(token))
@@ -105,7 +106,7 @@ func Set(obj interface{}, pointer string, value interface{}) (err error) {
 			}
 			p = v
 			token = tokens[i]
-			if n, err := strconv.Atoi(token); err == nil {
+			if n, err := strconv.Atoi(token); err == nil && isIndexed(v) {
 				v = v.Index(n)
 			} else {
 				v = v.MapIndex(reflect.ValueOf(token))
@@ -146,7 +147,7 @@ func Remove(obj interface{}, pointer string) (rv interface{}, err error) {
 			p = v
 			ptoken = token
 			token = tokens[i]
-			if n, err := strconv.Atoi(token); err == nil {
+			if n, err := strconv.Atoi(token); err == nil && isIndexed(v) {
 				v = v.Index(n)
 			} else {
 				v = v.MapIndex(reflect.ValueOf(token))
@@ -183,4 +184,13 @@ func Remove(obj interface{}, pointer string) (rv interface{}, err error) {
 		p.Set(reflect.ValueOf(nv))
 	}
 	return obj, nil
+}
+
+func isIndexed(v reflect.Value) bool {
+	switch v.Kind() {
+	case reflect.Array:
+	case reflect.Slice:
+		return true
+	}
+	return false
 }
