@@ -10,11 +10,11 @@ import (
 func parse(pointer string) ([]string, error) {
 	pointer = strings.TrimSpace(pointer)
 	if !strings.HasPrefix(pointer, "/") {
-		return nil, fmt.Errorf("Invalid JSON pointer: %q", pointer)
+		return nil, fmt.Errorf("invalid JSON pointer: %q", pointer)
 	}
 	tokens := strings.Split(pointer[1:], "/")
 	if len(tokens) == 0 { //*|| len(tokens[0]) == 0 {
-		return nil, fmt.Errorf("Invalid JSON pointer: %q", pointer)
+		return nil, fmt.Errorf("invalid JSON pointer: %q", pointer)
 	}
 	for i, token := range tokens {
 		tokens[i] = strings.Replace(
@@ -60,7 +60,7 @@ func Has(obj interface{}, pointer string) (rv bool) {
 func Get(obj interface{}, pointer string) (rv interface{}, err error) {
 	defer func() {
 		if e := recover(); e != nil {
-			err = fmt.Errorf("Invalid JSON pointer: %q: %v", pointer, e)
+			err = fmt.Errorf("invalid JSON pointer: %q: %v", pointer, e)
 		}
 	}()
 	tokens, err := parse(pointer)
@@ -91,7 +91,7 @@ func Get(obj interface{}, pointer string) (rv interface{}, err error) {
 func Set(obj interface{}, pointer string, value interface{}) (err error) {
 	defer func() {
 		if e := recover(); e != nil {
-			err = fmt.Errorf("Invalid JSON pointer: %q: %v", pointer, e)
+			err = fmt.Errorf("invalid JSON pointer: %q: %v", pointer, e)
 		}
 	}()
 	tokens, err := parse(pointer)
@@ -131,7 +131,7 @@ func Set(obj interface{}, pointer string, value interface{}) (err error) {
 func Remove(obj interface{}, pointer string) (rv interface{}, err error) {
 	defer func() {
 		if e := recover(); e != nil {
-			err = fmt.Errorf("Invalid JSON pointer: %q: %v", pointer, e)
+			err = fmt.Errorf("invalid JSON pointer: %q: %v", pointer, e)
 		}
 	}()
 	tokens, err := parse(pointer)

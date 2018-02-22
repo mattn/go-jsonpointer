@@ -32,7 +32,7 @@ func TestHas(t *testing.T) {
 
 		value := Has(obj, testcase.pointer)
 		if value != testcase.expect {
-			t.Fatalf("Expected %v, but %v:", testcase.expect, value)
+			t.Fatalf("expected %v, but %v:", testcase.expect, value)
 		}
 	}
 }
@@ -47,7 +47,7 @@ var testGetCases = []struct {
 	{`{"foo":2}`, `/foo`, 2.0, ``},
 	{`{"foo":[]}`, `/foo`, []interface{}{}, ``},
 	{`{"foo":"yes"}`, `/foo`, "yes", ``},
-	{`{"foo":3.14}`, ``, "", `Invalid JSON pointer: ""`},
+	{`{"foo":3.14}`, ``, "", `invalid JSON pointer: ""`},
 	{`{"foo":3.14}`, `/`, map[string]interface{}{"foo": 3.14}, ``},
 	{`{"hoge":"fuga","foo":{"fuga":"foo1","hoge":"foo2"}}`, `/foo/fuga`, "foo1", ``},
 	{`{"foo~bar/baz":[1,3,true]}`, `/foo~0bar~1baz/1`, 3.0, ``},
@@ -109,7 +109,7 @@ func TestSet(t *testing.T) {
 				t.Fatal(err)
 			}
 		} else if !reflect.DeepEqual(obj, expect) {
-			t.Fatalf("Expected %v, but %v:", expect, obj)
+			t.Fatalf("expected %v, but %v:", expect, obj)
 		}
 	}
 }
@@ -147,7 +147,7 @@ func TestRemove(t *testing.T) {
 				t.Fatal(err)
 			}
 		} else if !reflect.DeepEqual(v, expect) {
-			t.Fatalf("Expected %v, but %v:", expect, v)
+			t.Fatalf("expected %v, but %v:", expect, v)
 		}
 	}
 }
