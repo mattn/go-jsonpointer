@@ -19,6 +19,7 @@ var testHasCases = []struct {
 	{`{"hoge":"fuga","foo":{"fuga":"foo1","hoge":"foo2"}}`, `/foo/fuga`, true},
 	{`{"foo~bar/baz":[1,3,true]}`, `/foo~0bar~1baz/1`, true},
 	{`{"0": [9, 8, 7]}`, `/0/1`, true},
+	{`{"0": {"foo": 8}}`, `/0/foo`, true},
 }
 
 func TestHas(t *testing.T) {
