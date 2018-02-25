@@ -5,10 +5,11 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"unicode"
 )
 
 func parse(pointer string) ([]string, error) {
-	pointer = strings.TrimSpace(pointer)
+	pointer = strings.TrimLeftFunc(pointer, unicode.IsSpace)
 	if !strings.HasPrefix(pointer, "/") {
 		return nil, fmt.Errorf("invalid JSON pointer: %q", pointer)
 	}

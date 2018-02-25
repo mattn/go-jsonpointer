@@ -20,6 +20,7 @@ var testHasCases = []struct {
 	{`{"foo~bar/baz":[1,3,true]}`, `/foo~0bar~1baz/1`, true},
 	{`{"0": [9, 8, 7]}`, `/0/1`, true},
 	{`{"0": {"foo": 8}}`, `/0/foo`, true},
+	{`{"0": {" ": "foo"}}`, `/0/ `, true},
 }
 
 func TestHas(t *testing.T) {
@@ -52,6 +53,7 @@ var testGetCases = []struct {
 	{`{"hoge":"fuga","foo":{"fuga":"foo1","hoge":"foo2"}}`, `/foo/fuga`, "foo1", ``},
 	{`{"foo~bar/baz":[1,3,true]}`, `/foo~0bar~1baz/1`, 3.0, ``},
 	{`{"0": [9, 8, 7]}`, `/0/1`, 8.0, ``},
+	{`{"0": {" ": "foo"}}`, `/0/ `, "foo", ``},
 }
 
 func TestGet(t *testing.T) {
@@ -89,6 +91,7 @@ var testSetCases = []struct {
 	{`{"hoge":"fuga","foo":{"fuga":"foo1","hoge":"foo2"}}`, `/foo/fuga`, 3.0, `{"hoge":"fuga","foo":{"fuga":3,"hoge":"foo2"}}`, ``},
 	{`{"foo~bar/baz":[1,3,true]}`, `/foo~0bar~1baz/1`, 4.0, `{"foo~bar/baz":[1,4,true]}`, ``},
 	{`{"0": [9, 8, 7]}`, `/0/1`, 20.0, `{"0": [9, 20, 7]}`, ``},
+	{`{"0": {" ": "foo"}}`, `/0/ `, "bar", `{"0": {" ": "bar"}}`, ``},
 }
 
 func TestSet(t *testing.T) {
@@ -127,6 +130,7 @@ var testRemoveCases = []struct {
 	{`{"hoge":"fuga","foo":{"fuga":"foo1","hoge":"foo2"}}`, `/foo/fuga`, `{"hoge":"fuga","foo":{"hoge":"foo2"}}`, ``},
 	{`{"foo~bar/baz":[1,3,true]}`, `/foo~0bar~1baz/1`, `{"foo~bar/baz":[1,true]}`, ``},
 	{`{"0": [9, 8, 7]}`, `/0/1`, `{"0": [9, 7]}`, ``},
+	{`{"0": {" ": "foo"}}`, `/0/ `, `{"0": {}}`, ``},
 }
 
 func TestRemove(t *testing.T) {
