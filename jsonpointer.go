@@ -195,6 +195,7 @@ func Remove(obj interface{}, pointer string) (rv interface{}, err error) {
 func isIndexed(v reflect.Value) bool {
 	switch v.Kind() {
 	case reflect.Array:
+		return true
 	case reflect.Slice:
 		return true
 	}
