@@ -181,7 +181,7 @@ func Remove(obj interface{}, pointer string) (rv interface{}, err error) {
 			}
 		}
 	} else {
-		nv = reflect.Zero(p.Type())
+		nv = reflect.MakeSlice(p.Type(), 0, p.Len())
 		n, _ := strconv.Atoi(token)
 		for m := 0; m < p.Len(); m++ {
 			if n != m {
