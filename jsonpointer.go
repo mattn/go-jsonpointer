@@ -187,7 +187,8 @@ func Remove(obj interface{}, pointer string) (rv interface{}, err error) {
 	} else if pp.Kind() == reflect.Map {
 		pp.SetMapIndex(reflect.ValueOf(ptoken), nv)
 	} else {
-		p.Set(reflect.ValueOf(nv))
+		n, _ := strconv.Atoi(ptoken)
+		pp.Index(n).Set(nv)
 	}
 	return obj, nil
 }
