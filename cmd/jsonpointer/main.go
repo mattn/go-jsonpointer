@@ -9,12 +9,16 @@ import (
 
 func fatalIf(err error) {
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s: %s", os.Args[0], err.Error())
+		fmt.Fprintf(os.Stderr, "%s: %s\n", os.Args[0], err.Error())
 		os.Exit(1)
 	}
 }
 
 func main() {
+	if len(os.Args) < 2 {
+		fmt.Fprintf(os.Stderr, "usage: %s pointer\n", os.Args[0])
+		os.Exit(1)
+	}
 	var v interface{}
 	err := json.NewDecoder(os.Stdin).Decode(&v)
 	fatalIf(err)
