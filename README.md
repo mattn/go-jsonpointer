@@ -1,6 +1,6 @@
 # go-jsonpointer
 
-[![Build Status](https://travis-ci.org/mattn/go-jsonpointer.png?branch=master)](https://travis-ci.org/mattn/go-jsonpointer)
+[![test](https://github.com/mattn/go-jsonpointer/actions/workflows/test.yml/badge.svg)](https://github.com/mattn/go-jsonpointer/actions/workflows/test.yml)
 [![Codecov](https://codecov.io/gh/mattn/go-jsonpointer/branch/master/graph/badge.svg)](https://codecov.io/gh/mattn/go-jsonpointer)
 [![GoDoc](https://godoc.org/github.com/mattn/go-jsonpointer?status.svg)](http://godoc.org/github.com/mattn/go-jsonpointer)
 [![Go Report Card](https://goreportcard.com/badge/github.com/mattn/go-jsonpointer)](https://goreportcard.com/report/github.com/mattn/go-jsonpointer)
