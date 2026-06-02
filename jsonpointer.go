@@ -25,7 +25,7 @@ func parse(pointer string) ([]string, error) {
 }
 
 // Has return whether the obj has pointer.
-func Has(obj interface{}, pointer string) (rv bool) {
+func Has(obj any, pointer string) (rv bool) {
 	defer func() {
 		if e := recover(); e != nil {
 			rv = false
@@ -58,7 +58,7 @@ func Has(obj interface{}, pointer string) (rv bool) {
 }
 
 // Get return a value which is pointed with pointer on obj.
-func Get(obj interface{}, pointer string) (rv interface{}, err error) {
+func Get(obj any, pointer string) (rv any, err error) {
 	defer func() {
 		if e := recover(); e != nil {
 			err = fmt.Errorf("invalid JSON pointer: %q: %v", pointer, e)
@@ -89,7 +89,7 @@ func Get(obj interface{}, pointer string) (rv interface{}, err error) {
 }
 
 // Set set a value which is pointed with pointer on obj.
-func Set(obj interface{}, pointer string, value interface{}) (err error) {
+func Set(obj any, pointer string, value any) (err error) {
 	defer func() {
 		if e := recover(); e != nil {
 			err = fmt.Errorf("invalid JSON pointer: %q: %v", pointer, e)
@@ -137,7 +137,7 @@ func Set(obj interface{}, pointer string, value interface{}) (err error) {
 }
 
 // Remove remove a value which is pointed with pointer on obj.
-func Remove(obj interface{}, pointer string) (rv interface{}, err error) {
+func Remove(obj any, pointer string) (rv any, err error) {
 	defer func() {
 		if e := recover(); e != nil {
 			err = fmt.Errorf("invalid JSON pointer: %q: %v", pointer, e)

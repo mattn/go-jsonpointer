@@ -19,7 +19,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "usage: %s pointer\n", os.Args[0])
 		os.Exit(1)
 	}
-	var v interface{}
+	var v any
 	err := json.NewDecoder(os.Stdin).Decode(&v)
 	fatalIf(err)
 	rv, err := jsonpointer.Get(v, os.Args[1])

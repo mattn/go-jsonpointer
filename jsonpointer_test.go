@@ -25,7 +25,7 @@ var testHasCases = []struct {
 
 func TestHas(t *testing.T) {
 	for _, testcase := range testHasCases {
-		var obj interface{}
+		var obj any
 		err := json.Unmarshal([]byte(testcase.json), &obj)
 		if err != nil {
 			t.Fatal(err)
@@ -41,15 +41,15 @@ func TestHas(t *testing.T) {
 var testGetCases = []struct {
 	json    string
 	pointer string
-	expect  interface{}
+	expect  any
 	err     string
 }{
 	{`{"foo":[1,3,true]}`, `/foo/2`, true, ``},
 	{`{"foo":2}`, `/foo`, 2.0, ``},
-	{`{"foo":[]}`, `/foo`, []interface{}{}, ``},
+	{`{"foo":[]}`, `/foo`, []any{}, ``},
 	{`{"foo":"yes"}`, `/foo`, "yes", ``},
 	{`{"foo":3.14}`, ``, "", `invalid JSON pointer: ""`},
-	{`{"foo":3.14}`, `/`, map[string]interface{}{"foo": 3.14}, ``},
+	{`{"foo":3.14}`, `/`, map[string]any{"foo": 3.14}, ``},
 	{`{"hoge":"fuga","foo":{"fuga":"foo1","hoge":"foo2"}}`, `/foo/fuga`, "foo1", ``},
 	{`{"foo~bar/baz":[1,3,true]}`, `/foo~0bar~1baz/1`, 3.0, ``},
 	{`{"0": [9, 8, 7]}`, `/0/1`, 8.0, ``},
@@ -58,7 +58,7 @@ var testGetCases = []struct {
 
 func TestGet(t *testing.T) {
 	for _, testcase := range testGetCases {
-		var obj interface{}
+		var obj any
 		err := json.Unmarshal([]byte(testcase.json), &obj)
 		if err != nil {
 			t.Fatal(err)
@@ -78,7 +78,7 @@ func TestGet(t *testing.T) {
 var testSetCases = []struct {
 	json    string
 	pointer string
-	value   interface{}
+	value   any
 	expect  string
 	err     string
 }{
@@ -100,7 +100,7 @@ var testSetCases = []struct {
 
 func TestSet(t *testing.T) {
 	for _, testcase := range testSetCases {
-		var obj, expect interface{}
+		var obj, expect any
 		err := json.Unmarshal([]byte(testcase.json), &obj)
 		if err != nil {
 			t.Fatal(err)
@@ -141,7 +141,7 @@ var testRemoveCases = []struct {
 
 func TestRemove(t *testing.T) {
 	for _, testcase := range testRemoveCases {
-		var obj, expect interface{}
+		var obj, expect any
 		err := json.Unmarshal([]byte(testcase.json), &obj)
 		if err != nil {
 			t.Fatal(err)
