@@ -119,9 +119,17 @@ func Set(obj interface{}, pointer string, value interface{}) (err error) {
 			i++
 		}
 		if p.Kind() == reflect.Map {
-			p.SetMapIndex(reflect.ValueOf(token), reflect.ValueOf(value))
+			rv := reflect.ValueOf(value)
+			if value == nil {
+				rv = reflect.Zero(p.Type().Elem())
+			}
+			p.SetMapIndex(reflect.ValueOf(token), rv)
 		} else {
-			v.Set(reflect.ValueOf(value))
+			rv := reflect.ValueOf(value)
+			if value == nil {
+				rv = reflect.Zero(v.Type())
+			}
+			v.Set(rv)
 		}
 		return nil
 	}
