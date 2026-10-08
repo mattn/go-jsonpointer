@@ -88,6 +88,9 @@ func Has(obj any, pointer string) (rv bool) {
 	if err != nil {
 		return false
 	}
+	if len(tokens) == 0 {
+		return true
+	}
 	return eval(reflect.ValueOf(obj), tokens).IsValid()
 }
 
@@ -101,6 +104,9 @@ func Get(obj any, pointer string) (rv any, err error) {
 	tokens, err := parse(pointer)
 	if err != nil {
 		return nil, err
+	}
+	if len(tokens) == 0 {
+		return obj, nil
 	}
 	v := eval(reflect.ValueOf(obj), tokens)
 	if !v.IsValid() {
