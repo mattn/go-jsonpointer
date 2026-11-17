@@ -203,3 +203,35 @@ func TestRFC6901(t *testing.T) {
 		mustErr(p, err)
 	}
 }
+
+func TestRootPointer(t *testing.T) {
+	for _, document := range []string{`null`, `{}`, `[]`, `0`, `false`, `true`, `""`} {
+		t.Run(document, func(t *testing.T) {
+			root := obj(t, document)
+			value, err := Get(root, "")
+			if err != nil {
+				t.Errorf("Get root: %v", err)
+			}
+			if !reflect.DeepEqual(value, root) {
+				t.Errorf("Get root = %#v, want %#v", value, root)
+			}
+			if !Has(root, "") {
+				t.Error("Has root = false")
+			}
+		})
+	}
+}
+
+func TestNullChildPointer(t *testing.T) {
+	root := obj(t, `null`)
+	for _, pointer := range []string{"/", "/missing", "missing", "/~"} {
+		t.Run(pointer, func(t *testing.T) {
+			if _, err := Get(root, pointer); err == nil {
+				t.Error("Get child of null: expected error")
+			}
+			if Has(root, pointer) {
+				t.Error("Has child of null = true")
+			}
+		})
+	}
+}
